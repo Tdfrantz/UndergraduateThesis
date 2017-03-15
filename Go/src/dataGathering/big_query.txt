@@ -1,0 +1,21 @@
+SELECT
+  a.repo_name, a.committer.email
+FROM
+  FLATTEN([bigquery-public-data:github_repos.commits], repo_name) AS A LEFT OUTER JOIN ( SELECT repo_name FROM FLATTEN([bigquery-public-data:github_repos.commits], repo_name) WHERE
+                                                        DATEDIFF(CURRENT_TIMESTAMP(),committer.date)<1
+  GROUP BY
+    repo_name
+  HAVING 
+    COUNT(committer.email) > 1 ) AS B ON a.repo_name=b.repo_name
+
+
+SELECT
+  repo_name
+FROM
+ [bigquery-public-data:github_repos.commits]  WHERE  DATEDIFF(CURRENT_TIMESTAMP(),committer.date)<3
+  GROUP BY
+    repo_name
+  HAVING 
+    COUNT(committer.email) > 1
+
+

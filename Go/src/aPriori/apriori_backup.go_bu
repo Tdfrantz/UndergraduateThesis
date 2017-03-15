@@ -1,0 +1,230 @@
+package main
+
+import "fmt"
+import "bufio"
+import "os"
+import "strings"
+import "strconv"
+import "golang-set"
+import "time"
+
+//inputs: file, delimeter, minSupport, maxTupleSize
+
+func main() {
+
+	start := time.Now()
+	debug:=1
+	//minSupport:=2
+	minSupportMult:=0.002
+	maxTupleSize:=4
+	filename:="data/google_data.dat"
+
+	outfile, err := os.Create("frequentItems_apriori.txt")
+	if err!=nil {
+		fmt.Println("Cannot open output file for writing.")
+	}
+	defer outfile.Close()
+	writer := bufio.NewWriter(outfile)
+
+	
+	/*******************FIRST PASS*********************/
+
+	//the map that we will store the count of each word in
+	var firstPass map[string]int
+	firstPass = make(map[string]int)
+
+	// OPEN THE FILE
+	f, err := os.Open(filename)	//retail.dat for now
+	if err!=nil {
+		fmt.Println("Cannot open file.")
+	}
+	defer f.Close()
+
+	// READ EVERY LINE
+	scanner := bufio.NewScanner(f)
+	baskets := make([]string,0)
+
+	for scanner.Scan(){
+		baskets = append(baskets, strings.TrimSpace(scanner.Text()))	//TrimSpace trims whitespace off the ends
+	}
+
+	//SET THE SUPPORT THRESHOLD RELATIVE TO THE NUMBER OF BASKETS
+	minSupport := int(minSupportMult*float64(len(baskets)))
+	fmt.Printf("%v",minSupport)
+
+	for _,basket := range baskets{ 
+		// SPLIT EACH LINE
+		splitLine := strings.Split(basket," ")	//retail.dat is split on space
+		
+		// ADD EACH COUNT TO THE MAP
+		for _,split := range splitLine{
+			firstPass[split]+=1
+		}
+	}
+	
+	if debug==1{
+		//PRINT ALL ENTRIES
+		fmt.Println("--------PRINTING ALL ENTRIES--------")
+		for key, value := range firstPass {
+    		fmt.Println("Key:", key, "Value:", value)
+    	}
+	}
+
+	// REMOVE ALL ENTRIES THAT ARE BELOW minSupport
+	for key, value := range firstPass {
+    	if value<minSupport {
+    		delete(firstPass,key)
+    	}
+    }
+
+	if debug==1{
+		//PRINT THE REMAINING ENTRIES
+		fmt.Println("\n--------PRINTING REMAINING ENTRIES--------")
+		for key, value := range firstPass {
+    		fmt.Println("Key:", key, "Value:", value)
+    	}
+	}
+
+	// MAKE AN ARRAY OF ALL FREQUENT ITEMS
+	frequentItems := make([]string,0)
+
+	for key,_ := range firstPass {
+		frequentItems = append(frequentItems,key)
+	}
+
+	firstPass = make(map[string]int) //clear the firstPass map to free memory
+	
+	//DECLARE THE FREQUENT SET OUT HERE, SO IT'S NOT OVERWRITTEN EVERY TIME
+	//Maybe can optimize here, a count is not needed for aPriori, so a map may not be needed. Still a nice data structure though
+
+	frequentSet := make(map[mapset.Set]int)
+
+	for tupleSize:=2;tupleSize<=maxTupleSize;tupleSize++{
+
+		// CREATE A LIST OF ALL CANDIDATE TUPLES
+		candidateSet := make([]mapset.Set,0)
+
+		//TO MAKE THE INITIAL PAIRS COMBINE ALL ELEMENTS IN THE FREQUENT ITEMS
+		if tupleSize==2{		
+			var alreadyChosen map[string]bool
+			alreadyChosen = make(map[string]bool)
+			for key := range frequentItems{	
+				alreadyChosen[frequentItems[key]]=true;
+				for key2 := range frequentItems{
+					_, check := alreadyChosen[frequentItems[key2]]
+					if check == false{
+						tempSet:=mapset.NewSet()
+						tempSet.Add(frequentItems[key])
+						tempSet.Add(frequentItems[key2])
+						candidateSet = append(candidateSet, tempSet)
+					}
+				}
+			}
+
+			//clear the alreadyChosen map
+			alreadyChosen = nil;
+		} else	{
+		//TO MAKE SUBSEQUENT SETS COMBINE THE FREQUENT SETS WITH EVERY FREQUENT ITEM
+			for key, _ := range frequentSet{
+				for index := range frequentItems{
+					if key.Contains(frequentItems[index])==false{
+						convertSet := mapset.NewSet()
+						convertSet.Add(frequentItems[index])
+						tempSet := convertSet.Union(key)
+						add := true
+						for index2 := range candidateSet{
+							if candidateSet[index2].Equal(tempSet){
+								add=false
+								break
+							}
+						}
+						if add{
+							candidateSet = append(candidateSet, tempSet)
+						}
+					}
+				}
+			}		
+
+		//CLEAR THE FREQUENT SETS VARIABLE
+			frequentSet = make(map[mapset.Set]int)
+		}
+
+		if debug == 1{
+			fmt.Println("\n----------PRINTING CANDIDATE PAIRS----------")
+				for pair :=range candidateSet{
+				fmt.Println(candidateSet[pair])
+			}
+		}
+
+		/***************************SECOND PASS***************************/
+
+		for basketIndex := range baskets{
+			line:= baskets[basketIndex]
+			
+			// SPLIT EACH LINE AND MAKE IT INTO A SET
+			splitLine := strings.Split(line," ")	//retail.dat is split on space
+			lineSet := mapset.NewSet()
+			for split := range splitLine{
+				lineSet.Add(splitLine[split])
+			}
+
+			// COMPARE THE INTERSECTION OF EACH CANDIDATE SET WITH THE LINE'S SET
+			for _,set := range candidateSet{
+				
+				// IF THE INTERSECTION OF A CANDIDATE SET AND THE LINE EQUALS THE CANDIDATE SET
+				// THEN WE ADD IT AS A FREQUENT PAIR
+
+				if debug==1{
+					fmt.Print("Comparing the intersection of: ")
+					fmt.Print(set)
+					fmt.Print(" and ")
+					fmt.Println(lineSet)
+				}
+
+				checkSet := lineSet.Intersect(set)
+
+				if checkSet.Equal(set){
+					frequentSet[set]+=1
+				}
+			}
+		}
+
+		if debug==1{
+			//PRINT ALL ENTRIES
+			fmt.Println("--------PRINTING ALL ENTRIES--------")
+			for key, value := range frequentSet {
+	   			fmt.Println("Key:", key, "Value:", value)
+	   		}
+		}
+		
+		// REMOVE ALL ENTRIES THAT ARE BELOW minSupport
+		for key, value := range frequentSet {
+	   		if value<minSupport {
+	   			delete(frequentSet,key)
+	   		}
+	   	}
+
+	   	// WRITE THE FREQUENT SET ITEMS TO FILE
+		outString := "Printing tuples of size " + strconv.Itoa(tupleSize) + ":\n"
+		_, err = writer.WriteString(outString)
+
+		for key, value := range frequentSet{
+			outString = key.String() + " : " + strconv.Itoa(value) + "\n"
+			_, err = writer.WriteString(outString)
+		} 
+
+		_,err = writer.WriteString("\n")
+
+	   	if debug==1{
+			//PRINT THE REMAINING ENTRIES
+			fmt.Println("\n--------PRINTING REMAINING ENTRIES--------")
+			for key, value := range frequentSet {
+	   			fmt.Println("Key:", key, "Value:", value)
+	   		}
+		}
+		writer.Flush()
+		end := time.Now()
+		fmt.Printf("Done printing tuples of size %v in %v seconds.\n", tupleSize, end.Sub(start))
+	}
+
+}

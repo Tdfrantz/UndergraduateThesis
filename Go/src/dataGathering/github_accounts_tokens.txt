@@ -1,0 +1,32 @@
+USERNAME					GMAIL PW			GH PW				TOKEN
+tdfrantz@gmail.com			you know it			you know it			db14af379e69078c6521540f992e8dce4aa67832
+100484424thesis1@gmail.com	100484424thesis1	thesis100484424		f354c192e8e869cc4ad324e0002213379dc63e12
+100484424thesis2@gmail.com	thesis100484424		thesis100484424		192fcd83c3c9a462bbfc2e42a8782df84e5f20ed
+100484424thesis3@gmail.com	thesis100484424		thesis100484424		f48b27c59584100e3b4eaf853c9eae35db74a3e0
+100484424thesis4@gmail.com											8a1a0b8b6cb518f7b9c88bdaf74fdc7e24a8a4ed
+tdfrantz+thesis5@gmail.com 	thesis100484424		thesis100484424		0db3cdf1d9675f94625a4483a5ce2d45fefcaaa1
+tdfrantz+thesis6@gmail.com	thesis100484424		thesis100484424		1a47d4525c69d85d8470e55a075c3ffdc46da032
+tdfrantz+thesis7@gmail.com											61e3490551c080845b887c81ccb91161d84608de
+tdfrantz+thesis8@gmail.com											edfff7e8b7e69925e29a35d6a2b7ff445734923a
+tdfrantz+thesis9@gmail.com											5155fb2088bee5562df663171e90ed5bdf50c926
+tdfrantz+thesis10@gmail.com											d1c001653cbb06ad620362c92af2b658422f8603
+tdfrantz+thesis11@gmail.com											a428196b143be45c1a2166208ae46310b33705fd
+tdfrantz+thesis12@gmail.com											deecafc91563f58ede10d612e54a03b51aea1053
+tdfrantz+thesis13@gmail.com											115d2bb5a32f541ab72a18eb6ad5b4cdaaa91b95
+tdfrantz+thesis14@gmail.com											11990be36947c37c341fd48f8fdad4b8994c0b3c
+tdfrantz+thesis15@gmail.com											2f23d9613fdd76b4f4c99dfaa51dec47c570ef76
+tdfrantz+thesis16@gmail.com											2f88041612d354da4611a70fda06147f9b6b20a8
+tdfrantz+thesis17@gmail.com											977a8216e1974b2260271093a703d94cbf535429
+tdfrantz+thesis18@gmail.com											a918340cd9312e860a59af14b031ab06f763e961
+tdfrantz+thesis19@gmail.com											a08da5610b18fe88c8e9922609e6f68b7b717597
+tdfrantz+thesis20@gmail.com											0488a5b81ea780fe4fdcad9404e5d7577501ce16
+tdfrantz+thesis21@gmail.com											3b0cfc1d2e2478c3bfb6fa6e6a7851d4b83e88a7
+tdfrantz+thesis22@gmail.com											8084dea2a3877c41e1b97332e71b3c72ad9081c9
+tdfrantz+thesis23@gmail.com											27c26bda930638184955e1812888093be15c92ef
+tdfrantz+thesis24@gmail.com											7b49955486aa3070079bd3c272fa03973793a6b6
+tdfrantz+thesis25@gmail.com											d7436a484c08ac4294b0d1e649033d7dbdab7afe
+tdfrantz+thesis26@gmail.com											8aea2af0542ff0d04e41850c1f9d18e6a9fc0830
+tdfrantz+thesis27@gmail.com											35b50596a93ceb8f01101631e91a447b2bc17086
+tdfrantz+thesis28@gmail.com											7b16e7a83b1069bfa183466ecd5d05bc66ab0044
+tdfrantz+thesis29@gmail.com											e7cd1a7e348b8a1d0191f69dd06bad8dc1b6fe47
+tdfrantz+thesis30@gmail.com											ca0d535472151c2fc764489a15ba5bc2c2d432a1
